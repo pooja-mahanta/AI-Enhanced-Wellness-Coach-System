@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellnessAI Coach</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #2196F3;
+            --background: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+            color: var(--text);
+        }
+        
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .chat-section {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .chat-display {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+        
+        .ai-chat-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        
+        .ai-chat-box img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .ai-chat-area {
+            background-color: #f0f7f0;
+            padding: 15px;
+            border-radius: 0 12px 12px 12px;
+            max-width: 80%;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        
+        .user-chat-box {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        
+        .user-chat-area {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 12px 0 12px 12px;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+        
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border);
+            gap: 10px;
+        }
+        
+        .input-area input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+        
+        .input-area input:focus {
+            border-color: var(--primary);
+        }
+        
+        .input-area button {
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .wellness-sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .wellness-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .wellness-card h3 {
+            margin-top: 0;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .progress-container {
+            margin: 15px 0;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            width: 65%;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .quick-action {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .quick-action:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .quick-action i {
+            font-size: 20px;
+        }
+        
+        .health-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .metric {
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+        
+        .flashcard-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .flashcard-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .close-flashcards {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            color: var(--text-light);
+            font-size: 20px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="logo">
+                <span class="logo-icon">🌿</span>
+                <span>WellnessAI Coach</span>
+            </div>
+            <button id="showCardsBtn" style="display: none;">
+                <i class="fas fa-book-open"></i>
+                <span>Health Notes</span>
+            </button>
+        </div>
+        
+        <div class="main-content">
+            <div class="chat-section">
+                <div class="chat-display" id="chatDisplay">
+                    <!-- Messages will appear here -->
+                    <div class="ai-chat-box">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="AI Coach" width="40">
+                        <div class="ai-chat-area">
+                            <strong>Welcome to your WellnessAI Coach!</strong> I'm here to support your holistic health journey. How can I assist you today? You can ask about:
+                            <ul>
+                                <li>Nutrition and meal planning</li>
+                                <li>Exercise recommendations</li>
+                                <li>Mental wellbeing strategies</li>
+                                <li>Sleep optimization</li>
+                                <li>Stress management techniques</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-area">
+                    <input type="text" id="prompt" placeholder="Ask about nutrition, exercise, sleep, stress...">
+                    <button id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button class="image-upload-btn" id="imageUploadBtn" title="Upload Image">
+                        <i class="fas fa-image"></i>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    </button>
+                    <button class="microphone-btn" id="microphoneBtn" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="wellness-sidebar">
+                <div class="wellness-card">
+                    <h3><i class="fas fa-chart-line"></i> Wellness Progress</h3>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>This Week</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="health-metrics">
+                        <div class="metric">
+                            <div class="metric-value">7.5</div>
+                            <div class="metric-label">Sleep Hours</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">12K</div>
+                            <div class="metric-label">Daily Steps</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">2.5L</div>
+                            <div class="metric-label">Water Intake</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wellness-card">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="quick-action" onclick="handleMealPlan()">
+                            <i class="fas fa-utensils"></i>
+                            <span>Meal Plan</span>
+                        </button>
+                        <button class="quick-action" onclick="handleWorkout()">
+                            <i class="fas fa-running"></i>
+                            <span>Workout</span>
+                        </button>
+                        <button class="quick-action" onclick="handleMeditation()">
+                            <i class="fas fa-brain"></i>
+                            <span>Meditate</span>
+                        </button>
+                        <button class="quick-action" onclick="handleSleepTips()">
+                            <i class="fas fa-bed"></i>
+                            <span>Sleep Tips</span>
+                        </button>
+                        <button class="quick-action" onclick="handleCheckIn()">
+                            <i class="fas fa-heartbeat"></i>
+                            <span>Check-in</span>
+                        </button>
+                        <button class="quick-action" onclick="handleJournal()">
+                            <i class="fas fa-book"></i>
+                            <span>Journal</span>
+                        </button>
+                        <button class="quick-action" onclick="handleHydrate()">
+                            <i class="fas fa-water"></i>
+                            <span>Hydrate</span>
+                        </button>
+                        <button class="quick-action" onclick="handleWalk()">
+                            <i class="fas fa-walking"></i>
+                            <span>Walk</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="wellness-card">
+                    <h3><i class="fas fa-calendar-check"></i> Today's Goals</h3>
+                    <ul style="padding-left: 20px;">
+                        <li>Drink 8 glasses of water</li>
+                        <li>30-minute yoga session</li>
+                        <li>Journal for 10 minutes</li>
+                        <li>Eat 5 servings of veggies</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flashcard-section" id="flashcardContainer">
+            <button class="close-flashcards" id="closeFlashcards">✕</button>
+            <div class="flashcard-container">
+                <h3>Your Health Notes</h3>
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-inner">
+                        <p>No health notes yet. Start chatting with your WellnessAI Coach to save important health information.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modalContainer" class="modal-container">
+            <div class="wellness-modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <div id="modalInner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDFu4DREzvH0Z6ITZGrSwyYVmQrhnmJMTQ";
+        
+        async function sendMessage() {
+            const promptInput = document.getElementById('prompt');
+            const message = promptInput.value.trim();
+            
+            if (message) {
+                // Add user message to chat
+                const chatDisplay = document.getElementById('chatDisplay');
+                const userMessage = document.createElement('div');
+                userMessage.className = 'user-chat-box';
+                userMessage.innerHTML = `
+                    <div class="user-chat-area">${message}</div>
+                `;
+                chatDisplay.appendChild(userMessage);
+                
+                // Clear input
+                promptInput.value = '';
+                
+                // Show loading message
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'ai-chat-box';
+                aiMessage.innerHTML = `
+                    <img src="ai.png" alt="AI Coach" width="40">
+                    <div class="ai-chat-area">
+                        <div class="loading-indicator">
+                            <div class="loading-dot"></div>
+                            <div class="loading-dot"></div>
+                            <div class="loading-dot"></div>
+                        </div>
+                    </div>
+                `;
+                chatDisplay.appendChild(aiMessage);
+                chatDisplay.scrollTop = chatDisplay.scrollHeight;
+
+                let requestBody = {
+                    "contents": [{
+                        "parts": [{
+                            "text": `As an AI Wellness Coach, please provide supportive and encouraging guidance for: ${message}`
+                        }]
+                    }]
+                };
+
+                let requestoption = {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
+                }
+
+                try {
+                    let response = await fetch(api_url, requestoption);
+                    let data = await response.json();
+                    let apiresponse = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+                    const text = aiMessage.querySelector(".ai-chat-area");
+                    text.innerHTML = apiresponse;
+                } catch(error) {
+                    console.log(error);
+                    const text = aiMessage.querySelector(".ai-chat-area");
+                    text.innerHTML = "Sorry, I encountered an error. Please try again.";
+                }
+                
+                chatDisplay.scrollTop = chatDisplay.scrollHeight;
+            }
+        }
+
+        // Event listeners for sending messages
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+        document.getElementById('prompt').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Handle quick actions
+        async function handleQuickAction(message) {
+            document.getElementById('prompt').value = message;
+            await sendMessage();
+        }
+
+        // Quick action handlers
+        function handleMealPlan() {
+            handleQuickAction("Create a healthy meal plan for today that includes breakfast, lunch, dinner, and snacks. Consider balanced nutrition and portion control.");
+        }
+
+        function handleWorkout() {
+            handleQuickAction("Suggest a 30-minute workout routine that I can do at home, including warm-up and cool-down exercises.");
+        }
+
+        function handleMeditation() {
+            handleQuickAction("Guide me through a 5-minute mindfulness meditation session, with step-by-step instructions.");
+        }
+
+        function handleSleepTips() {
+            handleQuickAction("What are the most effective tips for improving sleep quality? Include both pre-bedtime routine and sleep environment recommendations.");
+        }
+
+        function handleCheckIn() {
+            showMoodCheckModal();
+        }
+
+        function handleJournal() {
+            showJournalPrompt();
+        }
+
+        function handleHydrate() {
+            wellnessMetrics.waterIntake += 250; // Add 250ml (1 glass)
+            saveWellnessMetrics();
+            updateMetricsDisplay();
+            displaySystemMessage("Added 250ml of water! Keep staying hydrated!");
+        }
+
+        function handleWalk() {
+            wellnessMetrics.steps += 2000; // Assume a short walk of 2000 steps
+            saveWellnessMetrics();
+            updateMetricsDisplay();
+            displaySystemMessage("Added 2000 steps! Keep moving!");
+        }
+
+        // Initialize wellness metrics
+        let wellnessMetrics = {
+            waterIntake: 0,
+            steps: 0,
+            sleepHours: 0,
+            mood: null,
+            lastUpdated: new Date().toISOString()
+        };
+
+        // Load metrics from localStorage on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initWellnessMetrics();
+            updateMetricsDisplay();
+        });
+
+        function initWellnessMetrics() {
+            const savedMetrics = localStorage.getItem('wellnessMetrics');
+            if (savedMetrics) {
+                wellnessMetrics = JSON.parse(savedMetrics);
+            }
+        }
+
+        function updateMetricsDisplay() {
+            const metrics = document.querySelectorAll('.metric-value');
+            metrics[0].textContent = wellnessMetrics.sleepHours.toFixed(1);
+            metrics[1].textContent = (wellnessMetrics.steps / 1000).toFixed(1) + 'K';
+            metrics[2].textContent = (wellnessMetrics.waterIntake / 1000).toFixed(1) + 'L';
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const progress = calculateDailyProgress();
+            const progressFill = document.querySelector('.progress-fill');
+            const progressLabel = document.querySelector('.progress-label span:last-child');
+            progressFill.style.width = `${progress}%`;
+            progressLabel.textContent = `${progress}%`;
+        }
+
+        function calculateDailyProgress() {
+            const goals = {
+                water: 2000, // 2L in ml
+                steps: 10000,
+                sleep: 8 // hours
+            };
+            
+            const waterProgress = Math.min(wellnessMetrics.waterIntake / goals.water, 1);
+            const stepsProgress = Math.min(wellnessMetrics.steps / goals.steps, 1);
+            const sleepProgress = Math.min(wellnessMetrics.sleepHours / goals.sleep, 1);
+            
+            const totalProgress = ((waterProgress + stepsProgress + sleepProgress) / 3) * 100;
+            return Math.round(totalProgress);
+        }
+
+        function saveWellnessMetrics() {
+            wellnessMetrics.lastUpdated = new Date().toISOString();
+            localStorage.setItem('wellnessMetrics', JSON.stringify(wellnessMetrics));
+        }
+
+        function displaySystemMessage(message) {
+            const systemMessage = document.createElement('div');
+            systemMessage.className = 'system-message';
+            systemMessage.innerHTML = `<div class="system-message-content">${message}</div>`;
+            document.querySelector('.chat-display').appendChild(systemMessage);
+            systemMessage.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showMoodCheckModal() {
+            const modalContainer = document.getElementById('modalContainer');
+            const modalInner = document.getElementById('modalInner');
+            
+            modalInner.innerHTML = `
+                <h3>How are you feeling today?</h3>
+                <div class="mood-options">
+                    <button class="mood-option" data-mood="great">😊 Great</button>
+                    <button class="mood-option" data-mood="good">🙂 Good</button>
+                    <button class="mood-option" data-mood="okay">😐 Okay</button>
+                    <button class="mood-option" data-mood="tired">😕 Tired</button>
+                    <button class="mood-option" data-mood="stressed">😟 Stressed</button>
+                </div>
+            `;
+            
+            modalContainer.style.display = 'flex';
+            
+            const moodButtons = modalInner.querySelectorAll('.mood-option');
+            moodButtons.forEach(button => {
+                button.onclick = () => {
+                    const mood = button.dataset.mood;
+                    wellnessMetrics.mood = mood;
+                    saveWellnessMetrics();
+                    modalContainer.style.display = 'none';
+                    displaySystemMessage(`Mood updated to: ${mood}`);
+                };
+            });
+        }
+
+        function showJournalPrompt() {
+            const modalContainer = document.getElementById('modalContainer');
+            const modalInner = document.getElementById('modalInner');
+            
+            modalInner.innerHTML = `
+                <h3>Daily Journal</h3>
+                <textarea id="journalEntry" placeholder="How are you feeling? What are you grateful for today?" rows="5"></textarea>
+                <div class="modal-actions">
+                    <button class="save-journal" onclick="saveJournalEntry()">Save</button>
+                    <button class="close-modal" onclick="closeModal()">Cancel</button>
+                </div>
+            `;
+            
+            modalContainer.style.display = 'flex';
+        }
+
+        function saveJournalEntry() {
+            const entry = document.getElementById('journalEntry').value;
+            if (entry.trim()) {
+                const journalEntries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+                journalEntries.push({
+                    date: new Date().toISOString(),
+                    content: entry
+                });
+                localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
+                closeModal();
+                displaySystemMessage("Journal entry saved successfully!");
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modalContainer').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('modalContainer').addEventListener('click', (e) => {
+            if (e.target.id === 'modalContainer') {
+                closeModal();
+            }
+        });
+
+        // Flashcard toggle functionality
+        document.getElementById('showCardsBtn').addEventListener('click', function() {
+            document.getElementById('flashcardContainer').style.display = 'flex';
+        });
+        
+        document.getElementById('closeFlashcards').addEventListener('click', function() {
+            document.getElementById('flashcardContainer').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
